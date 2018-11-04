@@ -1,0 +1,14 @@
+version: "3"
+
+services:
+
+  postgres:
+    image: arminc/clair-db
+    restart: unless-stopped
+  clair_local:
+    image: arminc/clair-local-scan:v2.0.6
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    ports:
+      - "6060:6060"
