@@ -41,9 +41,25 @@ CLAIR_ADDR=localhost ./klar python:3.6-slim
 KLAR_TRACE=1 CLAIR_ADDR=localhost ./klar python:3.6-slim
 ```
 
-## Json output
+## JSON output
 ```
 JSON_OUTPUT=1 CLAIR_ADDR=localhost ./klar python:3.6-slim  | jq . 
+```
+
+### Show issues that have been fixed
+```
+JSON_OUTPUT=1 CLAIR_OUTPUT=Unknown CLAIR_ADDR=0.0.0.0 \
+    klar node:6.9.4-alpine \
+        | jq -r '.Vulnerabilities[] | .[] | select(.FixedBy != null)'
+```
+
+### Show issues for which there's no fix
+
+This is potentially very uesful - if there's no such fix, there's not much you can do except monitor the CVE (so maybe this changes your deployment strategy)
+```
+JSON_OUTPUT=1 CLAIR_OUTPUT=Unknown CLAIR_ADDR=0.0.0.0 \
+    klar node:6.9.4-alpine \
+        | jq -r '.Vulnerabilities[] | .[] | select(.FixedBy == null)'
 ```
 
 ## Ignore low-risk vulnerabilities
