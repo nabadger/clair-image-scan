@@ -1,14 +1,23 @@
-version: "3"
+version: '3'
 
 services:
 
   postgres:
     image: arminc/clair-db
     restart: unless-stopped
+    network_mode: host          
   clair_local:
     image: arminc/clair-local-scan:v2.0.6
+    command: [-config, /config/config.yaml]
     restart: unless-stopped
     depends_on:
       - postgres
     ports:
       - "6060:6060"
+    network_mode: host        
+    volumes:
+    - /tmp:/tmp
+    - ./clair_config:/config
+  registry:
+    image: registry:latest
+    network_mode: host
